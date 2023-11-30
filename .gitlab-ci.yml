@@ -1,0 +1,130 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+default:
+  image: docker:latest
+  services:
+    - docker:dind
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  IMAGE_NAME: erieq/game-mutual
+  IMAGE_TAG: csharp-app-1.0
+  DOCKER_HOST: tcp://localhost:2375
+  BACKEND_DIRECTORY: ./GameMutualAPI/GameMutual.sln
+  FRONTEND_DIRECTORY: ./GameMutualFrontend/
+
+stages:
+- Vue-Build
+- ASP-Build
+- test
+- sonarqube-check
+- sonarqube-vulnerability-report
+- build_image
+
+Vue-Build:
+  tags:
+    - docker
+  stage: Vue-Build
+  services:
+    - docker:dind
+  script:
+    - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+    - docker build -t erieq/frontend-gamemutual $BACKEND_DIRECTORY
+    - docker push erieq/frontend-gamemutual 
+  allow_failure: true
+
+ASP-Build:
+  tags:
+    - docker
+  stage: ASP-Build
+  services:
+    - docker:dind
+  script:
+    - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+    - docker build -t erieq/game-mutual $FRONTEND_DIRECTORY
+    - docker push erieq/game-mutual
+  allow_failure: true
+
+sast:
+  tags: 
+  - sast
+
+ASP-Unit-Test:
+  tags:
+    - csharp
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  coverage: '/Code coverage: \d+(?:\.\d+)?/'
+  variables:
+    SOLUTION_DIRECTORY: ./GameMutualAPI/GameMutual.sln
+  script:
+    - ls -R
+    - sudo dotnet restore $SOLUTION_DIRECTORY
+    - sudo dotnet build $SOLUTION_DIRECTORY
+    - sudo dotnet test $SOLUTION_DIRECTORY
+  allow_failure: true
+    
+sonarqube-check:
+  tags:
+    - sonarqube
+  stage: sonarqube-check
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  script:
+    - sudo apt-get update
+    - sudo apt-get install --yes --no-install-recommends openjdk-17-jre
+    - export PATH="$PATH:$HOME/.dotnet/tools"
+    - dotnet sonarscanner begin /k:"I510637_game-mutual_AYvtZnUrZlX88Bmommvq" /d:sonar.token="$SONAR_TOKEN" /d:"sonar.host.url=$SONAR_HOST_URL"
+    - dotnet build $SOLUTION_DIRECTORY
+    - dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+  allow_failure: true
+
+
+sonarqube-vulnerability-report:
+  tags:
+  - sonarqube
+  stage: sonarqube-vulnerability-report
+  script:
+    - 'curl -u "${SONAR_TOKEN}:" "${SONAR_HOST_URL}/api/issues/gitlab_sast_export?projectKey=I510637_game-mutual_AYvtZnUrZlX88Bmommvq&branch=${CI_COMMIT_BRANCH}&pullRequest=${CI_MERGE_REQUEST_IID}" -o gl-sast-sonar-report.json'
+  artifacts:
+    expire_in: 1 day
+    reports:
+      sast: gl-sast-sonar-report.json
+  dependencies:
+    - sonarqube-check
+  allow_failure: true
+
+build_image:
+  tags:
+    - docker
+  stage: build_image
+  image: docker:24.0.7
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""    
+  before_script:
+    - docker info
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS $CI_REGISTRY
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+  services:
+    - docker:24.0.7-dind
+  only:
+    - merge_requests
+    - master
+    - main
+    - develop
+  allow_failure: true

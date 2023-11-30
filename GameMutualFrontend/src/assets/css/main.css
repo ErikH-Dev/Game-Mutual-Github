@@ -1,0 +1,24 @@
+:root {
+    --background: rgb(232 232 237/70%);
+    --primary-text: #fff;
+    --secondary-text: #2c3e50;
+
+    --primary-accent: rgb(24, 154, 211);
+    --secondary-accent: rgb(16, 125, 172);
+    --tartiary-accent: rgb(0, 80, 115);
+
+    --remove: rgb(231, 76, 60);
+    --create: rgb(113, 199, 119);
+}
+
+body {
+    background-color: var(--background);
+    height: 100%;
+    width: 100%;
+    font-size: 24px;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--secondary-text);
+    margin: 0;
+}
