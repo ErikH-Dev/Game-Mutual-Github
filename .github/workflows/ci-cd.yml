@@ -102,7 +102,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"ErikH-Dev_Game-Mutual-Github" /o:"erikh-dev" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="$BACKEND_DIRECTORY"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"ErikH-Dev_Game-Mutual-Github" /o:"erikh-dev" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="."
           dotnet test $BACKEND_DIRECTORY --collect:"XPlat Code Coverage"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
