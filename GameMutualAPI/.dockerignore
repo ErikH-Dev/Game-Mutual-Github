@@ -1,3 +1,6 @@
+# Folders that should not be included in the image.
+UnitTesting/
+
 **/.classpath
 **/.dockerignore
 **/.env

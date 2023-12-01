@@ -121,3 +121,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: ${{ env.FRONTEND_DIRECTORY }}
+          args: >
+            -Dsonar.projectKey=YourProjectKey
+            -Dsonar.organization=YourOrganization
