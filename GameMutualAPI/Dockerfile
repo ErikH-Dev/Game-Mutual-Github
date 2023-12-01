@@ -3,17 +3,17 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore dependencies
-COPY ["GameMutualAPI/API/API.csproj", "./API/"]
-COPY ["GameMutualAPI/DAL/DAL.csproj", "./DAL/"]
-COPY ["GameMutualAPI/Logic/Logic.csproj", "./Logic/"]
-COPY ["GameMutualAPI/SharedObjects/SharedObjects.csproj", "./SharedObjects/"]
+COPY ["API/API.csproj", "./API/"]
+COPY ["DAL/DAL.csproj", "./DAL/"]
+COPY ["Logic/Logic.csproj", "./Logic/"]
+COPY ["SharedObjects/SharedObjects.csproj", "./SharedObjects/"]
 RUN dotnet restore "./API/API.csproj"
 
 # Copy the rest of the application code
-COPY ["GameMutualAPI/API/", "./API/"]
-COPY ["GameMutualAPI/DAL/", "./DAL/"]
-COPY ["GameMutualAPI/Logic/", "./Logic/"]
-COPY ["GameMutualAPI/SharedObjects/", "./SharedObjects/"]
+COPY ["API/", "./API/"]
+COPY ["DAL/", "./DAL/"]
+COPY ["Logic/", "./Logic/"]
+COPY ["SharedObjects/", "./SharedObjects/"]
 
 # Build the application
 RUN dotnet build "./API/API.csproj" -c Release -o /app/build
