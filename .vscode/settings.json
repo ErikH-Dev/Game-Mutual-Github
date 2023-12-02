@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": "file:///c%3A/Users/Eriek/source/repos/Game-Mutual-Github/.github/workflows/ci-cd.yml"
+    }
+}
