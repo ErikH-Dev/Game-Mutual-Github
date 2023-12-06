@@ -30,8 +30,9 @@ export default {
       this.$emit('search-games', searchQuery);
     },
     handleSelectedUsersChanged(selectedUsers) {
-      this.$emit('selected-users-changed', selectedUsers);
-    },
+    this.selectedUsers = selectedUsers;
+    this.$emit("selected-users-changed", this.selectedUsers);
+  },
   },
   props: ['isSidebarOpen'],
   computed: {

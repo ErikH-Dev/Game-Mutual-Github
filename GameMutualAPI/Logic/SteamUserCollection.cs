@@ -16,9 +16,14 @@ namespace Logic
 		{
 			_iSteamUserCollection = iSteamUserCollection;
 		}
-		public async Task<List<SteamUserModel>> GetUserAsync(string steamUserId)
+		public async Task<List<SteamUserModel>> GetUserByIDAsync(string steamUserId)
 		{
-			return await _iSteamUserCollection.GetUserAsync(steamUserId);
+			return await _iSteamUserCollection.GetUserByIDAsync(steamUserId);
+		}
+		public async Task<List<SteamUserModel>> GetUserByCustomIDAsync(string steamUserId)
+		{
+			string steam64ID = await _iSteamUserCollection.GetUserByCustomIDAsync(steamUserId);
+			return await _iSteamUserCollection.GetUserByIDAsync(steam64ID);
 		}
 	}
 }

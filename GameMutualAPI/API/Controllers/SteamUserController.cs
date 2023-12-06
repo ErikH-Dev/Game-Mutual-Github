@@ -1,4 +1,5 @@
-﻿using Logic;
+﻿using API.ValidationAttributes;
+using Logic;
 using Logic.Interface;
 using Microsoft.AspNetCore.Mvc;
 using SharedObjects.SteamUserModels;
@@ -17,9 +18,14 @@ namespace API.Controllers
 			_logger = logger;
 		}
 		[HttpGet("GetByID/{steamUserID}")]
-		public async Task<List<SteamUserModel>> GetSteamUserData(string steamUserID)
+		public async Task<List<SteamUserModel>> GetSteamUserDataByID([ValidSteam64ID] string steamUserID)
 		{
-			return await _steamUserCollection.GetUserAsync(steamUserID);
+			return await _steamUserCollection.GetUserByIDAsync(steamUserID);
+		}
+		[HttpGet("GetByCustomID/{steamUserCustomID}")]
+		public async Task<List<SteamUserModel>> GetSteamUserByCustomID ([ValidSteamVanityURL] string steamUserCustomID)
+		{
+			return await _steamUserCollection.GetUserByCustomIDAsync(steamUserCustomID);
 		}
 	}
 }

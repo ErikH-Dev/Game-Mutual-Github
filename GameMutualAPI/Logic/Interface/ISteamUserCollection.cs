@@ -9,6 +9,7 @@ namespace Logic.Interface
 {
 	public interface ISteamUserCollection
 	{
-		Task<List<SteamUserModel>> GetUserAsync(string steamUserId);
+		Task<List<SteamUserModel>> GetUserByIDAsync(string steamUserId);
+		Task<string> GetUserByCustomIDAsync(string steamUserCustomId);
 	}
 }
