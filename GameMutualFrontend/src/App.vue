@@ -1,5 +1,5 @@
 <template>
-  <MutualGame msg="Hi"/>
+  <MutualGame msg="Hi" />
 </template>
 
 <script>
@@ -9,6 +9,6 @@ export default {
   name: 'App',
   components: {
     MutualGame
-  }
+  },
 }
 </script>

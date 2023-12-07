@@ -1,43 +1,51 @@
 <template>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+
     <div id="hamburger-menu" class="sidebar">
         <a id="hamburger-icon" @click="toggleNav"><i class="fa fa-bars"></i></a>
         <hr>
         <div class="nav-container">
             <div class="nav-item">
-                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-house"/></a>
+                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
                 <span>Home</span>
             </div>
             <div class="nav-item">
-                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-gamepad"/></a>
+                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-gamepad" /></a>
                 <span>Mutual games</span>
             </div>
             <div class="nav-item">
-                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-user"/></a>
+                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-user" /></a>
                 <span>My profile</span>
             </div>
         </div>
         <hr>
         <div class="favourites-list">
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user"/><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user"/><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user"/><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user"/><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user"/><span>Friend</span></a>
+            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
+            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
+            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
+            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
+            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
         </div>
         <div class="user-info">
-            <p>NormalUsername</p>
+            <UserInformation />
+            <LogoutButton />
         </div>
     </div>
 </template>
 
 <script>
+import LogoutButton from './LogoutButton.vue';
+import UserInformation from './UserInformation.vue';
+
 export default {
-  props: ['isSidebarOpen'],
-  methods: {
-    toggleNav() {
-    this.$emit('toggle');
+    props: ['isSidebarOpen'],
+    components: {
+        LogoutButton,
+        UserInformation
+    },
+    methods: {
+        toggleNav() {
+            this.$emit('toggle');
             const sidebar = document.getElementById("hamburger-menu");
             const sidebarWidth = sidebar.style.width;
             const navItems = document.querySelectorAll(".nav-item span");
@@ -55,21 +63,21 @@ export default {
                 favouriteItems.forEach(item => item.classList.add("hidden-text"));
             }
         }
-  },
-  computed: {
-    sidebarStyles() {
-      return {
-        width: this.isSidebarOpen ? '240px' : '60px',
-      };
     },
-  },
+    computed: {
+        sidebarStyles() {
+            return {
+                width: this.isSidebarOpen ? '240px' : '60px',
+            };
+        },
+    },
 };
 
 </script>
 
 <style>
 .sidebar {
-    display:flex;
+    display: flex;
     flex-direction: column;
     color: #fff;
     height: 100%;
@@ -84,49 +92,58 @@ export default {
     padding-left: 10px;
     padding-right: 10px;
 }
+
 .sidebar hr {
     width: 100%;
     color: var(--secondary-accent);
 }
+
 .hidden-text {
     display: none;
 }
+
 #hamburger-icon {
     height: 40px;
     width: 40px;
     color: var(--primary-accent);
     padding: 0.5vw;
 }
+
 .nav-container {
     display: flex;
     flex-direction: column;
 }
+
 .nav-item {
     display: flex;
     align-items: center;
     width: 100%;
     padding-bottom: 5px;
 }
+
 .nav-item span {
     margin-left: 10px;
 }
+
 .nav-item-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  width: 40px;
-  height: 40px;
-  background-color: var(--secondary-accent);
-  border-radius: 15px;
-  color: white;
-  text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--secondary-accent);
+    border-radius: 15px;
+    color: white;
+    text-decoration: none;
 }
+
 .favourites-list {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .favourites-list .favourite-item {
     text-decoration: none;
     color: #fff;
@@ -137,9 +154,9 @@ export default {
     background-color: var(--secondary-accent);
     border-radius: 15px;
 }
+
 .user-info {
     margin-top: auto;
     display: flex;
     flex-direction: row;
-}
-</style>
+}</style>

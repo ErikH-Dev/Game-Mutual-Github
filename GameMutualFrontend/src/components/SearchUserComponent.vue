@@ -4,8 +4,8 @@
     <p>Enter a Steam user ID to compare with.</p>
     <div id="search-result" v-if="userFound">
       <button class="read-user" @click="addUser">
-        <img class="avatar" :src="user.avatarfull" alt="Steam User Icon" />
-        <span>{{ user.personaname }}</span>
+        <img class="avatar" :src="steamUser.avatarfull" alt="Steam User Icon" />
+        <span>{{ steamUser.personaname }}</span>
       </button>
     </div>
     <div v-if="error">
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       steamUserId: "",
-      user: null,
+      steamUser: null,
       userFound: false,
       error: null,
       searchedUsers: [],
@@ -66,18 +66,18 @@ export default {
           const users = await response.json();
 
           if (users.length > 0) {
-            this.user = users[0];
+            this.steamUser = users[0];
             this.userFound = true;
             // Emit the Steam64Id instead of the vanity URL
-            this.$emit("steam-user-id-fetched", this.user.steamid);
+            this.$emit("steam-user-id-fetched", this.steamUser.steamid);
           } else {
-            this.user = null;
+            this.steamUser = null;
             this.userFound = false;
             this.error = "User not found";
           }
         } catch (error) {
           console.error("Error fetching user:", error);
-          this.user = null;
+          this.steamUser = null;
           this.userFound = false;
           this.error = "Error while getting user data. Please try again.";
         } finally {
@@ -86,13 +86,13 @@ export default {
       }, 1000);
     },
     addUser() {
-      if (!this.searchedUsers.some(user => user.steamUserId === this.steamUserId)) {
+      if (!this.searchedUsers.some(steamUser => steamUser.steamUserId === this.steamUserId)) {
         this.searchedUsers.push({
-          steamUserId: this.user ? this.user.steamid : this.steamUserId,
-          avatarfull: this.user ? this.user.avatarfull : "",
-          personaname: this.user ? this.user.personaname : "",
+          steamUserId: this.steamUser ? this.steamUser.steamid : this.steamUserId,
+          avatarfull: this.steamUser ? this.steamUser.avatarfull : "",
+          personaname: this.steamUser ? this.steamUser.personaname : "",
         });
-        this.$emit("selected-users-changed", this.searchedUsers.map((user) => user.steamUserId));
+        this.$emit("selected-users-changed", this.searchedUsers.map((steamUser) => steamUser.steamUserId));
         this.steamUserId = "";
         this.userFound = false;
       }
@@ -104,7 +104,7 @@ export default {
     },
     removeUser(index) {
       this.searchedUsers.splice(index, 1);
-      this.$emit("selected-users-changed", this.searchedUsers.map((user) => user.steamUserId));
+      this.$emit("selected-users-changed", this.searchedUsers.map((steamUser) => steamUser.steamUserId));
     },
     removeAllUsers() {
       this.searchedUsers = [];

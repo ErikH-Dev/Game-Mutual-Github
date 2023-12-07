@@ -62,7 +62,7 @@ export default {
         },
         handleSelectedUsersChanged(selectedUsers) {
             const selectedUsersArray = Array.from(selectedUsers);
-            const steamUserIds = selectedUsersArray.map(user => user.steamUserId);
+            const steamUserIds = selectedUsersArray.map(steamUser => steamUser.steamUserId);
             this.getGames(steamUserIds, this.searchQuery);
         },
 

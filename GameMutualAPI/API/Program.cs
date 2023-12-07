@@ -1,10 +1,27 @@
 using DAL;
 using Logic;
 using Logic.Interface;
+using Logic.ValidateScopes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+
+var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+	options.Authority = domain;
+	options.Audience = builder.Configuration["Auth0:Audience"];
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		NameClaimType = ClaimTypes.NameIdentifier
+	};
+});
 
 builder.Services.AddCors(options =>
 {
@@ -15,6 +32,13 @@ builder.Services.AddCors(options =>
 					  });
 });
 
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("read:messages", policy => policy.Requirements.Add(new
+	HasScopeRequirement("read:messages", domain)));
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -31,7 +55,6 @@ builder.Services.AddScoped<SteamGameCollection>();
 builder.Services.AddScoped<SteamGameCacheHandler>();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
@@ -41,9 +64,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseCors(MyAllowSpecificOrigins);
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapControllers();
+});
 
 app.MapControllers();
 

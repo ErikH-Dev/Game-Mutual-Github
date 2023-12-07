@@ -3,7 +3,8 @@
     <div class="compare-container">
       <div class="compare-container-content">
         <div class="content-container">
-          <SearchUserComponent ref="searchUserComponent" @selected-users-changed="handleSelectedUsersChanged"></SearchUserComponent>
+          <SearchUserComponent ref="searchUserComponent" @selected-users-changed="handleSelectedUsersChanged">
+          </SearchUserComponent>
         </div>
         <div class="content-container">
           <SearchGamesComponent @search-games="handleSearchGames" />
@@ -30,9 +31,9 @@ export default {
       this.$emit('search-games', searchQuery);
     },
     handleSelectedUsersChanged(selectedUsers) {
-    this.selectedUsers = selectedUsers;
-    this.$emit("selected-users-changed", this.selectedUsers);
-  },
+      this.selectedUsers = selectedUsers;
+      this.$emit("selected-users-changed", this.selectedUsers);
+    },
   },
   props: ['isSidebarOpen'],
   computed: {
@@ -58,6 +59,7 @@ export default {
   color: #fff;
   min-width: 800px;
 }
+
 .compare-container-content {
   display: flex;
   flex-direction: row;
