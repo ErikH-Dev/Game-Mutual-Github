@@ -1,12 +1,13 @@
-﻿using Logic.Interface;
+﻿using DAL.SteamGameModels;
+using Logic.Interface;
 using Newtonsoft.Json;
-using SharedObjects.SteamGameModels;
+using SharedObjects;
 
 namespace DAL
 {
 	public class SteamGameDAL : ISteamGameCollection
 	{
-		public async Task<List<SteamGameModel>> GetGamesOfUserAsync(string steamUserId)
+		public async Task<IEnumerable<ISteamGame>> GetGamesOfUserAsync(string steamUserId)
 		{
 			string baseUrl = $"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={ApiHelper.key}&steamids={steamUserId}&include_appinfo=true&include_played_free_games=true&format=json&steamid={steamUserId}&format=json";
 			ApiHelper.IntializeClient();
@@ -20,7 +21,7 @@ namespace DAL
 						return new List<SteamGameModel>();
 					}
 					SteamGameResponseModel? steamResponseModel = JsonConvert.DeserializeObject<SteamGameResponseModel>(json);
-					return steamResponseModel.response.games.ToList();
+					return steamResponseModel.Response.Games.ToList();
 				}
 				catch (JsonSerializationException ex)
 				{

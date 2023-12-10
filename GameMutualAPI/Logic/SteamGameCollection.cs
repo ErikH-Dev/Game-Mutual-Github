@@ -1,6 +1,7 @@
 ﻿using Logic.Interface;
+using Logic.Objects;
 using Newtonsoft.Json;
-using SharedObjects.SteamGameModels;
+using SharedObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class SteamGameCollection
+	public class SteamGameCollection
 	{
 		private readonly ISteamGameCollection _iSteamGameCollection;
 
@@ -18,13 +19,13 @@ namespace Logic
 		{
 			_iSteamGameCollection = iSteamGameCollection;
 		}
-		public async Task<List<SteamGameModel>> GetGamesOfUserAsync(string steamUserId)
+		public async Task<IEnumerable<ISteamGame>> GetGamesOfUserAsync(string steamUserId)
 		{
 			return await _iSteamGameCollection.GetGamesOfUserAsync(steamUserId);
 		}
-		public async Task<List<SteamGameModel>> GetMutualGamesAsync(List<string> steamUserIDs)
+		public async Task<IEnumerable<ISteamGame>> GetMutualGamesAsync(List<string> steamUserIDs)
 		{
-            Dictionary<string, List<SteamGameModel>> gamesPerUser = new Dictionary<string, List<SteamGameModel>>();
+			Dictionary<string, IEnumerable<ISteamGame>> gamesPerUser = new Dictionary<string, IEnumerable<ISteamGame>>();
 			foreach (string userId in steamUserIDs)
 			{
 				gamesPerUser.Add(userId, await _iSteamGameCollection.GetGamesOfUserAsync(userId));
@@ -32,11 +33,11 @@ namespace Logic
 			return FilterMutualGames(gamesPerUser);
 		}
 
-		private List<SteamGameModel> FilterMutualGames(Dictionary<string, List<SteamGameModel>> gamesPerUser)
+		private IEnumerable<ISteamGame> FilterMutualGames(Dictionary<string, IEnumerable<ISteamGame>> gamesPerUser)
 		{
 			SteamGameEqualityComparer equalityComparer = new SteamGameEqualityComparer();
-            Dictionary<string, List<SteamGameModel>>? sortedDictionary = SortDictionaryByListCount(gamesPerUser);
-            List<SteamGameModel> commonObjects = sortedDictionary.First().Value;
+			Dictionary<string, IEnumerable<ISteamGame>>? sortedDictionary = SortDictionaryByListCount(gamesPerUser);
+			IEnumerable<ISteamGame> commonObjects = sortedDictionary.First().Value;
 
 			foreach (var value in sortedDictionary.Values.Skip(1))
 			{
@@ -45,21 +46,21 @@ namespace Logic
 
 			return commonObjects;
 		}
-		private  Dictionary<string, List<SteamGameModel>> SortDictionaryByListCount(Dictionary<string, List<SteamGameModel>> gamesPerUser)
+		private Dictionary<string, IEnumerable<ISteamGame>> SortDictionaryByListCount(Dictionary<string, IEnumerable<ISteamGame>> gamesPerUser)
 		{
-			return gamesPerUser.OrderBy(kv => kv.Value.Count).ToDictionary(kv => kv.Key, kv => kv.Value);
+			return gamesPerUser.OrderBy(kv => kv.Value.Count()).ToDictionary(kv => kv.Key, kv => kv.Value);
 		}
 
-		public class SteamGameEqualityComparer : IEqualityComparer<SteamGameModel>
+		public class SteamGameEqualityComparer : IEqualityComparer<ISteamGame>
 		{
-			public bool Equals(SteamGameModel x, SteamGameModel y)
+			public bool Equals(ISteamGame x, ISteamGame y)
 			{
-				return x.appid == y.appid;
+				return x.AppID == y.AppID;
 			}
 
-			public int GetHashCode(SteamGameModel obj)
+			public int GetHashCode(ISteamGame obj)
 			{
-				return obj.appid.GetHashCode();
+				return obj.AppID.GetHashCode();
 			}
 		}
 	}

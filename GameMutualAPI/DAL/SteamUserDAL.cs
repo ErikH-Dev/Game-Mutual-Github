@@ -1,7 +1,8 @@
-﻿using Logic.Interface;
+﻿using DAL.SteamGameModels;
+using DAL.SteamUserModels;
+using Logic.Interface;
 using Newtonsoft.Json;
-using SharedObjects.SteamGameModels;
-using SharedObjects.SteamUserModels;
+using SharedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace DAL
 {
 	public class SteamUserDAL : ISteamUserCollection
 	{
-		public async Task<List<SteamUserModel>> GetUserByIDAsync(string steamUserId)
+		public async Task<IEnumerable<ISteamUser>> GetUserByIDAsync(string steamUserId)
 		{
 			string baseUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={ApiHelper.key}&steamids={steamUserId}";
 			ApiHelper.IntializeClient();
@@ -26,7 +27,7 @@ namespace DAL
 						return null;
 					}
 					SteamUserResponseModel? steamResponseModel = JsonConvert.DeserializeObject<SteamUserResponseModel>(json);
-					return steamResponseModel.response.players.ToList();
+					return steamResponseModel.Response.Players;
 				}
 				catch (JsonSerializationException ex)
 				{
@@ -52,7 +53,7 @@ namespace DAL
 						return null;
 					}
 					SteamUserVanityResponseModel responseModel = JsonConvert.DeserializeObject<SteamUserVanityResponseModel>(json);
-					return responseModel.response.steamid;
+					return responseModel.Response.SteamID;
 				}
 				catch (JsonSerializationException ex)
 				{

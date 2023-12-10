@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedObjects.SteamUserModels
+namespace SharedObjects
 {
-	public class UserResponseModel
+	public interface IUser
 	{
-		public List<SteamUserModel> players { get; set; }
 	}
 }
