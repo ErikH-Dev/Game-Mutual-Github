@@ -1,6 +1,7 @@
 ﻿using Logic.Interface;
+using Logic.Objects;
 using Newtonsoft.Json;
-using SharedObjects.SteamUserModels;
+using SharedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,11 @@ namespace Logic
 		{
 			_iSteamUserCollection = iSteamUserCollection;
 		}
-		public async Task<List<SteamUserModel>> GetUserByIDAsync(string steamUserId)
+		public async Task<IEnumerable<ISteamUser>> GetUserByIDAsync(string steamUserId)
 		{
 			return await _iSteamUserCollection.GetUserByIDAsync(steamUserId);
 		}
-		public async Task<List<SteamUserModel>> GetUserByCustomIDAsync(string steamUserId)
+		public async Task<IEnumerable<ISteamUser>> GetUserByCustomIDAsync(string steamUserId)
 		{
 			string steam64ID = await _iSteamUserCollection.GetUserByCustomIDAsync(steamUserId);
 			return await _iSteamUserCollection.GetUserByIDAsync(steam64ID);

@@ -1,4 +1,5 @@
-﻿using SharedObjects.SteamGameModels;
+﻿using Logic.Objects;
+using SharedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Logic.Interface
 {
 	public interface ISteamGameCollection
 	{
-		Task<List<SteamGameModel>> GetGamesOfUserAsync(string steamUserId);
+		Task<IEnumerable<ISteamGame>> GetGamesOfUserAsync(string steamUserId);
 	}
 }

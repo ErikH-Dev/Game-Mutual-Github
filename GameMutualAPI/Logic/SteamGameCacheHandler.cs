@@ -1,6 +1,6 @@
 ﻿using Logic.Interface;
 using Microsoft.Extensions.Caching.Memory;
-using SharedObjects.SteamGameModels;
+using SharedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +21,14 @@ namespace Logic
 			_steamGameCollection = steamGameCollection;
 		}
 
-		public async Task<List<SteamGameModel>> GetGamesOfUser(string steamUserId)
+		public async Task<IEnumerable<ISteamGame>> GetGamesOfUser(string steamUserId)
 		{
 			string cacheKey = $"GamesOfUser_{steamUserId}";
 
 			return await GetOrSetCache(cacheKey, async () => await FetchGamesOfUser(steamUserId));
 		}
 
-		public async Task<List<SteamGameModel>> GetMutualGames(List<string> steamUserIDs)
+		public async Task<IEnumerable<ISteamGame>> GetMutualGames(List<string> steamUserIDs)
 		{
 			string cacheKey = $"MutualGames_{string.Join("_", steamUserIDs)}";
 
@@ -44,11 +44,11 @@ namespace Logic
 			}
 			return cachedData;
 		}
-		private async Task<List<SteamGameModel>> FetchGamesOfUser(string steamUserId)
+		private async Task<IEnumerable<ISteamGame>> FetchGamesOfUser(string steamUserId)
 		{
 			return await _steamGameCollection.GetGamesOfUserAsync(steamUserId);
 		}
-		private async Task<List<SteamGameModel>> FetchMutualGames(List<string> steamUserIDs)
+		private async Task<IEnumerable<ISteamGame>> FetchMutualGames(List<string> steamUserIDs)
 		{
 			return await _steamGameCollection.GetMutualGamesAsync(steamUserIDs);
 		}

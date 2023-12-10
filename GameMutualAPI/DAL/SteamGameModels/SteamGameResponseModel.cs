@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedObjects.SteamGameModels
+namespace DAL.SteamGameModels
 {
 	public class SteamGameResponseModel
 	{
-		public GameResponseModel response { get; set; }
+		[JsonProperty("response")]
+		public GameResponseModel Response { get; set; }
 	}
 }

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SharedObjects.SteamGameModels;
 using Logic;
 using Logic.Interface;
+using DAL.SteamGameModels;
+using SharedObjects;
 
 namespace API.Controllers
 {
@@ -26,42 +27,42 @@ namespace API.Controllers
 		}
 
 		[HttpGet("GetByID/{steamUserID}")]
-		public async Task<List<SteamGameModel>> GetGamesOfUser(int? pageNumber, string steamUserID = "76561198274926223")
+		public async Task<IEnumerable<ISteamGame>> GetGamesOfUser(int? pageNumber, string steamUserID = "76561198274926223")
 		{
-			List<SteamGameModel> steamGames = await _steamGameCacheHandler.GetGamesOfUser(steamUserID);
+			IEnumerable<ISteamGame> steamGames = await _steamGameCacheHandler.GetGamesOfUser(steamUserID);
 			return GetPagedResults(steamGames, pageNumber);
 		}
 
 		[HttpGet("GetByID/search/{steamuserID}/")]
-		public async Task<List<SteamGameModel>> SearchGamesOfUser(string query, int? pageNumber, string steamUserID = "76561198274926223")
+		public async Task<IEnumerable<ISteamGame>> SearchGamesOfUser(string query, int? pageNumber, string steamUserID = "76561198274926223")
 		{
-			List<SteamGameModel> steamGames = await _steamGameCacheHandler.GetGamesOfUser(steamUserID);
+			IEnumerable<ISteamGame> steamGames = await _steamGameCacheHandler.GetGamesOfUser(steamUserID);
 			string lowerQuery = query.ToLower();
-			steamGames = steamGames.Where(x => x.name.ToLower().Contains(lowerQuery)).ToList();
+			steamGames = steamGames.Where(x => x.Name.ToLower().Contains(lowerQuery)).ToList();
 			return GetPagedResults(steamGames, pageNumber);
 		}
 
 		[HttpGet("GetMutuallyOwnedGames/{*steamUserIDs}", Name = "GetMutuallyOwnedGames")]
-		public async Task<List<SteamGameModel>> GetMutuallyOwnedGames(int? pageNumber, string steamUserIDs)
+		public async Task<IEnumerable<ISteamGame>> GetMutuallyOwnedGames(int? pageNumber, string steamUserIDs)
 		{
 			List<string> userIDs = steamUserIDs.Split(',').ToList();
-			List<SteamGameModel> steamGames = await _steamGameCacheHandler.GetMutualGames(userIDs);
+			IEnumerable<ISteamGame> steamGames = await _steamGameCacheHandler.GetMutualGames(userIDs);
 			return GetPagedResults(steamGames, pageNumber);
 		}
 
 		[HttpGet("GetMutuallyOwnedGames/search/{*steamUserIDs}", Name = "SearchMutuallyOwnedGames")]
-		public async Task<List<SteamGameModel>> SearchMutuallyOwnedGames(string query, int? pageNumber, string steamUserIDs)
+		public async Task<IEnumerable<ISteamGame>> SearchMutuallyOwnedGames(string query, int? pageNumber, string steamUserIDs)
 		{
 			List<string> userIDs = steamUserIDs.Split(',').ToList();
-			List<SteamGameModel> steamGames = await _steamGameCacheHandler.GetMutualGames(userIDs);
+			IEnumerable<ISteamGame> steamGames = await _steamGameCacheHandler.GetMutualGames(userIDs);
 			string lowerQuery = query.ToLower();
-			steamGames = steamGames.Where(x => x.name.ToLower().Contains(lowerQuery)).ToList();
+			steamGames = steamGames.Where(x => x.Name.ToLower().Contains(lowerQuery)).ToList();
 			return GetPagedResults(steamGames, pageNumber);
 		}
 
-		private List<SteamGameModel> GetPagedResults(List<SteamGameModel> steamGames, int? pageNumber)
+		private IEnumerable<ISteamGame> GetPagedResults(IEnumerable<ISteamGame> steamGames, int? pageNumber)
 		{
-			int totalGames = steamGames.Count;
+			int totalGames = steamGames.ToList().Count;
 			int startIndex = ((pageNumber ?? 0) - 1) * GAMES_PER_PAGE;
 			if (startIndex < totalGames)
 			{
@@ -70,7 +71,7 @@ namespace API.Controllers
 				return steamGames.Skip(startIndex).Take(gamesToTake).ToList();
 			}
 
-			return new List<SteamGameModel>();
+			return new List<ISteamGame>();
 		}
 	}
 }

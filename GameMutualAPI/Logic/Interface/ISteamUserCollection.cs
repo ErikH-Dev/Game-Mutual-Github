@@ -1,4 +1,4 @@
-﻿using SharedObjects.SteamUserModels;
+﻿using SharedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace Logic.Interface
 {
 	public interface ISteamUserCollection
 	{
-		Task<List<SteamUserModel>> GetUserByIDAsync(string steamUserId);
+		Task<IEnumerable<ISteamUser>> GetUserByIDAsync(string steamUserId);
 		Task<string> GetUserByCustomIDAsync(string steamUserCustomId);
 	}
 }

@@ -2,7 +2,6 @@
 
 namespace API.ValidationAttributes
 {
-	// Generate a class that inherits from ValidationAttribute and override the IsValid method which will make sure the input is between 3 and 32 characters long and only contains letters, numbers, and underscores.
 	public class ValidSteamVanityURL : ValidationAttribute
 	{
 		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
