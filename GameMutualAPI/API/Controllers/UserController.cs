@@ -15,6 +15,16 @@ namespace API.Controllers
 			_userCollection = userCollection;
 		}
 		[HttpGet]
+		// Create a new endpoint that updates a user
+		[HttpPut("{id}")]
+		[Authorize]
+		public ActionResult<string> UpdateUser(int id)
+		{
+			return Ok($"Update user {id}");
+		}
+
+		// Create a new endpoint that deletes a user
+		[HttpDelete("{id}")]
 		[Authorize]
 		public async Task<ActionResult<IUser>> GetUser(string token)
 		{

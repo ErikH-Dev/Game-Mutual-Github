@@ -26,9 +26,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy(name: MyAllowSpecificOrigins,
-					  policy =>
+					  builder =>
 					  {
-						  policy.WithOrigins("http://localhost:8080");
+						  builder.WithOrigins("http://localhost:8080")
+								 .AllowAnyHeader() // Allows any header
+								 .AllowAnyMethod(); // Allows any HTTP method
 					  });
 });
 
