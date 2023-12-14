@@ -3,7 +3,7 @@
         <button @click="login">Log in</button>
         <pre class="user-information" v-if="isAuthenticated">
         <img :src="user.picture" alt="Profile">
-          <p>{{ user.given_name }}</p>
+          <p>{{ user }}</p>
         </pre>
     </div>
 </template>

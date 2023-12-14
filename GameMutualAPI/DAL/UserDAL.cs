@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedObjects
+namespace DAL
 {
-	public class User
+	internal class UserDAL
 	{
 	}
 }
