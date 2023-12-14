@@ -1,35 +1,27 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
-	// Create a new controller called UserController that has endpoints for crud operations on users
 	[ApiController]
 	[Route("api/[controller]")]
 	public class UserController : ControllerBase
 	{
-		// Create a new endpoint that returns a list of users
-		[HttpGet]
-		public ActionResult<string> GetUsers()
-		{
-			return Ok("Get users");
-		}
 
-		// Create a new endpoint that returns a single user
-		[HttpGet("{id}")]
+		[HttpGet("user-information/{id}")]
 		public ActionResult<string> GetUser(int id)
 		{
 			return Ok($"Get user {id}");
 		}
 
-		// Create a new endpoint that creates a user
-		[HttpPost]
-		public ActionResult<string> CreateUser()
+		[HttpPost("sign-in/")]
+		public ActionResult<string> CreateUser([Required]string subject, [Required]string nickname, [Url]string picture, [EmailAddress]string email)
 		{
-			return Ok("Create user");
+			return Ok("This is a return message for a test.");
 		}
 
-		// Create a new endpoint that updates a user
 		[HttpPut("{id}")]
 		[Authorize]
 		public ActionResult<string> UpdateUser(int id)
@@ -37,7 +29,6 @@ namespace API.Controllers
 			return Ok($"Update user {id}");
 		}
 
-		// Create a new endpoint that deletes a user
 		[HttpDelete("{id}")]
 		[Authorize]
 		public ActionResult<string> DeleteUser(int id)
