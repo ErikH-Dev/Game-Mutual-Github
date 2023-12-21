@@ -1,34 +1,27 @@
 <template>
   <div class="app-container">
-    <NavigationSideBar @toggle="toggleSidebar" :isSidebarOpen="isSidebarOpen" /> 
     <CompareGamesContainer @selected-users-changed="handleSelectedUsersChanged" :isSidebarOpen="isSidebarOpen" @search-games="handleSearchGames" />
     <GamesContainer ref="gamescontainer" :isSidebarOpen="isSidebarOpen" :searchQuery="searchQuery" :pageNumber="pageNumber" :selectedUsers="selectedUsers" @selected-users-changed="handleSelectedUsersChanged" />
   </div>
 </template>
 
 <script>
-import NavigationSideBar from '../components/NavigationSideBar.vue';
 import CompareGamesContainer from '../components/CompareGamesContainer.vue';
 import GamesContainer from '../components/GameContainer.vue';
 
 export default {
   data() {
     return {
-      isSidebarOpen: false,
       selectedUsers: [],
       searchQuery: '',
       pageNumber: 1,
     };
   },
   components: {
-    NavigationSideBar,
     CompareGamesContainer,
     GamesContainer,
   },
   methods: {
-    toggleSidebar() {
-      this.isSidebarOpen = !this.isSidebarOpen;
-    },
     handleSelectedUsersChanged(selectedUsers) {
       this.selectedUsers = selectedUsers;
       this.pageNumber = 1;
@@ -50,11 +43,6 @@ export default {
   width: 100%;
   transition: ease-in-out;
   flex-direction: column;
-}
-
-.navigation-sidebar {
-  width: 240px;
-  flex: 0 0 auto;
 }
 
 .compare-games {

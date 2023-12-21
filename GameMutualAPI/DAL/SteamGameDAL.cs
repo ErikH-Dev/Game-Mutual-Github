@@ -1,4 +1,4 @@
-﻿using DAL.SteamGameModels;
+﻿using DAL.Models.SteamGameModels;
 using Logic.Interface;
 using Newtonsoft.Json;
 using SharedObjects;

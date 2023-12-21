@@ -1,13 +1,8 @@
-﻿using DAL.SteamGameModels;
-using DAL.SteamUserModels;
+﻿using DAL.Models.SteamGameModels;
+using DAL.Models.SteamUserModels;
 using Logic.Interface;
 using Newtonsoft.Json;
 using SharedObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {

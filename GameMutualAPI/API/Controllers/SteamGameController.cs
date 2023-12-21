@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Logic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Logic;
-using Logic.Interface;
-using DAL.SteamGameModels;
 using SharedObjects;
 
 namespace API.Controllers
@@ -16,14 +9,12 @@ namespace API.Controllers
 	public class SteamGameController : ControllerBase
 	{
 		private readonly SteamGameCacheHandler _steamGameCacheHandler;
-		private readonly ILogger<SteamGameController> _logger;
 
 		private readonly int GAMES_PER_PAGE = 100;
 
-		public SteamGameController(SteamGameCacheHandler steamGameCacheHandler, ILogger<SteamGameController> logger)
+		public SteamGameController(SteamGameCacheHandler steamGameCacheHandler)
 		{
 			_steamGameCacheHandler = steamGameCacheHandler;
-			_logger = logger;
 		}
 
 		[HttpGet("GetByID/{steamUserID}")]

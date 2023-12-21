@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace API.Models
+namespace API.Models.General
 {
 	public class UserCredentialsModel
 	{
@@ -11,5 +11,5 @@ namespace API.Models
 		public string Picture { get; set; }
 		[EmailAddress]
 		public string Email { get; set; }
-	}	
+	}
 }

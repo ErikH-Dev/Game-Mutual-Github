@@ -14,7 +14,7 @@ namespace API.ValidationAttributes
 			{
 				return new ValidationResult("Steam64ID must be 17 characters long.");
 			}
-			if(!long.TryParse(value.ToString(), out long steam64ID))
+			if (!long.TryParse(value.ToString(), out long steam64ID))
 			{
 				return new ValidationResult("Steam64ID must be a number.");
 			}

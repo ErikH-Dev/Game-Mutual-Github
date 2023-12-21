@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DAL": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CONNECTION_STRING": "a"
+      }
+    }
+  }
+}

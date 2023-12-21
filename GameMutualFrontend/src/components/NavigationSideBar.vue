@@ -1,92 +1,84 @@
 <template>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <div id="hamburger-menu" class="sidebar">
+    <div class="sidebar" :style="{ width: isSidebarOpen ? '240px' : '60px' }">
         <a id="hamburger-icon" @click="toggleNav"><i class="fa fa-bars"></i></a>
         <hr>
-        <div class="nav-container">
-            <div class="nav-item">
-                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-house" /></a>
+        <div class="nav-container" :class="{ 'hide-text': !isSidebarOpen }">
+            <router-link class="nav-item" to="/">
+                <font-awesome-icon class="nav-item-icon" icon="fa-solid fa-house" />
                 <span>Home</span>
-            </div>
-            <div class="nav-item">
-                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-gamepad" /></a>
+            </router-link>
+            <router-link class="nav-item" to="/">
+                <font-awesome-icon class="nav-item-icon" icon="fa-solid fa-gamepad" />
                 <span>Mutual games</span>
-            </div>
-            <div class="nav-item">
-                <a class="nav-item-icon" href="/"><font-awesome-icon icon="fa-solid fa-user" /></a>
+            </router-link>
+            <router-link class="nav-item" to="/profile">
+                <font-awesome-icon class="nav-item-icon" icon="fa-solid fa-user" />
                 <span>My profile</span>
-            </div>
+            </router-link>
+            <router-link v-if="isAuthenticated" class="nav-item" to="/settings">
+                <font-awesome-icon class="nav-item-icon" icon="fa-solid fa-cog" />
+                <span>Settings</span>
+            </router-link>
         </div>
         <hr>
-        <div class="favourites-list">
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
-            <a class="favourite-item" href="/"><font-awesome-icon icon="fa-solid fa-user" /><span>Friend</span></a>
+        <div class="favourites-list" :class="{ 'hide-text': !isSidebarOpen }">
+            <span class="favourite-item"><font-awesome-icon icon="fa-solid fa-user" />Friend</span>
         </div>
         <div class="user-info">
-            <UserInformation />
-            <LogoutButton />
+            <AuthenticationComponent/>
         </div>
     </div>
 </template>
 
 <script>
-import LogoutButton from './LogoutButton.vue';
-import UserInformation from './UserInformation.vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+import { useStore } from 'vuex';
+
+import AuthenticationComponent from './AuthenticationComponent.vue';
 
 export default {
     props: ['isSidebarOpen'],
     components: {
-        LogoutButton,
-        UserInformation
+        AuthenticationComponent,
+    },
+    setup() {
+        const { loginWithRedirect, user, isAuthenticated } = useAuth0();
+        const { logout } = useAuth0();
+        const store = useStore();
+        const login = async () => {
+            await loginWithRedirect();
+            store.commit('setUser', user.value);
+        };
+        return {
+            logout: () => {
+                logout({ logoutParams: { returnTo: window.location.origin } });
+            },
+            login,
+            isAuthenticated,
+        };
     },
     methods: {
         toggleNav() {
             this.$emit('toggle');
-            const sidebar = document.getElementById("hamburger-menu");
-            const sidebarWidth = sidebar.style.width;
-            const navItems = document.querySelectorAll(".nav-item span");
-            const favouriteItems = document.querySelectorAll(".favourite-item span")
-
-            if (sidebarWidth === "60px" || sidebarWidth === "") {
-                sidebar.style.width = "240px";
-                setTimeout(() => {
-                    navItems.forEach(item => item.classList.remove("hidden-text"));
-                    favouriteItems.forEach(item => item.classList.remove("hidden-text"));
-                }, 250);
-            } else {
-                sidebar.style.width = "60px";
-                navItems.forEach(item => item.classList.add("hidden-text"));
-                favouriteItems.forEach(item => item.classList.add("hidden-text"));
-            }
-        }
-    },
-    computed: {
-        sidebarStyles() {
-            return {
-                width: this.isSidebarOpen ? '240px' : '60px',
-            };
         },
     },
 };
-
 </script>
 
-<style>
+<style scoped>
 .sidebar {
     display: flex;
     flex-direction: column;
     color: #fff;
     height: 100%;
-    width: 300px;
+    width: 240px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: var(--tartiary-accent);
+    background-color: var(--tertiary-accent);
     overflow-x: hidden;
     transition: 0.25s;
     padding-left: 10px;
@@ -98,7 +90,7 @@ export default {
     color: var(--secondary-accent);
 }
 
-.hidden-text {
+.hide-text span {
     display: none;
 }
 
@@ -123,6 +115,7 @@ export default {
 
 .nav-item span {
     margin-left: 10px;
+    color: var(--primary-text);
 }
 
 .nav-item-icon {
@@ -146,7 +139,7 @@ export default {
 
 .favourites-list .favourite-item {
     text-decoration: none;
-    color: #fff;
+    color: var(--primary-text);
     width: 90%;
     margin: 2px;
     padding: 10px;
@@ -159,4 +152,5 @@ export default {
     margin-top: auto;
     display: flex;
     flex-direction: row;
-}</style>
+}
+</style>

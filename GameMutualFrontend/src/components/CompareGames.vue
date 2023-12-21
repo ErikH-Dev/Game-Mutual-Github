@@ -156,13 +156,13 @@ input:focus, input:hover {
 button {
   font-size: 16px;
   border: none;
-  background-color: var(--tartiary-accent);
+  background-color: var(--tertiary-accent);
   border-radius: 20px;
   padding: 1rem 2rem 1rem 2rem;
 }
 button:hover {
   background-color: #fff;
-  border: 2px solid var(--tartiary-accent);
+  border: 2px solid var(--tertiary-accent);
   transition: 150ms;
 }
 </style>

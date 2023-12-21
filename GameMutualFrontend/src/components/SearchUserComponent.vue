@@ -162,7 +162,7 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 10px;
-  background-color: var(--tartiary-accent);
+  background-color: var(--tertiary-accent);
   border-radius: 15px;
   padding: 10px;
   z-index: 2;
