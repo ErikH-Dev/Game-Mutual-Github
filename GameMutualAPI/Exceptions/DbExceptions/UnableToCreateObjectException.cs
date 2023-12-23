@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace DAL.ErrorHelper
+namespace Exceptions.DbExceptions
 {
 	[Serializable]
-	internal class UnableToCreateObjectException : Exception
+	public class UnableToCreateObjectException : Exception
 	{
 		public UnableToCreateObjectException()
 		{

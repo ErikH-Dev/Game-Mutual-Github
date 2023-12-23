@@ -10,8 +10,8 @@ namespace DAL
 	{
 		public async Task<IEnumerable<ISteamUser>> GetUserByIDAsync(string steamUserId)
 		{
-			string baseUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={ApiHelper.key}&steamids={steamUserId}";
 			ApiHelper.IntializeClient();
+			string baseUrl = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={Environment.GetEnvironmentVariable("key")}&steamids={steamUserId}";
 			using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(baseUrl))
 			{
 				try
@@ -36,8 +36,8 @@ namespace DAL
 		}
 		public async Task<string> GetUserByCustomIDAsync(string steamUserCustomId)
 		{
-			string baseUrl = $"http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={ApiHelper.key}&vanityurl={steamUserCustomId}";
 			ApiHelper.IntializeClient();
+			string baseUrl = $"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={Environment.GetEnvironmentVariable("key")}&vanityurl={steamUserCustomId}";
 			using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(baseUrl))
 			{
 				try

@@ -5,7 +5,9 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CONNECTION_STRING": "server=127.0.0.1;port=3306;user=root;password=quaking-yoyo-yapping;database=game_mutual",
+        "KEY": "6AC5CEA343B2F0F4D431E0287C8D1F77"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7257;http://localhost:5296"

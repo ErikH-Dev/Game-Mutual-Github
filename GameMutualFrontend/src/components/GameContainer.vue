@@ -5,7 +5,7 @@
         </div>
         <div class="games-container" v-if="!isLoading">
             <div class="game-item" v-for="(game, index) in games" :key="index">
-                <div class="game-card" :style="{ backgroundImage: `url(${getGameImageURL(game.appid)})` }">
+                <div class="game-card" :style="{ backgroundImage: `url(${getGameImageURL(game.appID)})` }">
                     <!-- <div class="game-title">{{ game.name }}</div> -->
                 </div>
             </div>
@@ -49,6 +49,7 @@ export default {
                 }
 
                 const data = await response.json();
+                console.log(data);
                 this.games = data;
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -57,8 +58,8 @@ export default {
             }
         },
 
-        getGameImageURL(appid) {
-            return `https://cdn.cloudflare.steamstatic.com/steam/apps/${appid}/hero_capsule.jpg`;
+        getGameImageURL(appID) {
+            return `https://cdn.cloudflare.steamstatic.com/steam/apps/${appID}/hero_capsule.jpg`;
         },
         handleSelectedUsersChanged(selectedUsers) {
             const selectedUsersArray = Array.from(selectedUsers);

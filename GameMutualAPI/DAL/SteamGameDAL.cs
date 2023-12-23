@@ -9,8 +9,8 @@ namespace DAL
 	{
 		public async Task<IEnumerable<ISteamGame>> GetGamesOfUserAsync(string steamUserId)
 		{
-			string baseUrl = $"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={ApiHelper.key}&steamids={steamUserId}&include_appinfo=true&include_played_free_games=true&format=json&steamid={steamUserId}&format=json";
 			ApiHelper.IntializeClient();
+			string baseUrl = $"https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key={Environment.GetEnvironmentVariable("key")}&steamids={steamUserId}&include_appinfo=true&include_played_free_games=true&format=json&steamid={steamUserId}&format=json";
 			using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(baseUrl))
 			{
 				try

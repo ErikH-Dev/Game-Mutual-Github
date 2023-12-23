@@ -9,7 +9,7 @@ namespace DAL.DBContext
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseMySql("server=127.0.0.1;port=3306;user=root;password=quaking-yoyo-yapping;database=game_mutual", new MySqlServerVersion(new Version(8, 2, 0)));
+			optionsBuilder.UseMySql(Environment.GetEnvironmentVariable("CONNECTION_STRING"), new MySqlServerVersion(new Version(8, 2, 0)));
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

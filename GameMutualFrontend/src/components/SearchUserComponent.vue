@@ -4,8 +4,8 @@
     <p>Enter a Steam user ID to compare with.</p>
     <div id="search-result" v-if="userFound">
       <button class="read-user" @click="addUser">
-        <img class="avatar" :src="steamUser.avatarfull" alt="Steam User Icon" />
-        <span>{{ steamUser.personaname }}</span>
+        <img class="avatar" :src="steamUser.avatarFull" alt="Steam User Icon" />
+        <span>{{ steamUser.personaName }}</span>
       </button>
     </div>
     <div v-if="error">
@@ -64,7 +64,7 @@ export default {
         try {
           const response = await fetch(apiUrl);
           const users = await response.json();
-
+          console.log(users);
           if (users.length > 0) {
             this.steamUser = users[0];
             this.userFound = true;
@@ -86,11 +86,11 @@ export default {
       }, 1000);
     },
     addUser() {
-      if (!this.searchedUsers.some(steamUser => steamUser.steamUserId === this.steamUserId)) {
+      if (!this.searchedUsers.some(steamUser => steamUser.steamID === this.steamUserId)) {
         this.searchedUsers.push({
-          steamUserId: this.steamUser ? this.steamUser.steamid : this.steamUserId,
-          avatarfull: this.steamUser ? this.steamUser.avatarfull : "",
-          personaname: this.steamUser ? this.steamUser.personaname : "",
+          steamUserId: this.steamUser ? this.steamUser.steamID : this.steamUserId,
+          avatarfull: this.steamUser ? this.steamUser.avatarFull : "",
+          personaname: this.steamUser ? this.steamUser.personaName : "",
         });
         this.$emit("selected-users-changed", this.searchedUsers.map((steamUser) => steamUser.steamUserId));
         this.steamUserId = "";
