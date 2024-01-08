@@ -39,27 +39,25 @@ namespace API.Controllers
 		[HttpPut]
 		[Route("Update")]
 		[Authorize]
-		public async Task<ActionResult<string>> UpdateUser(UserModel user)
+		public async Task<ActionResult<IUser>> UpdateUser(UserModel user)
 		{
-			await _userCollection.Update(user);
-			return Ok($"Update user {user.Name}");
+			var returnUser = await _userCollection.Update(user);
+			return Ok(returnUser);
 		}
 
 		[HttpDelete]
 		[Route("Delete")]
 		[Authorize]
-		public async Task<ActionResult<string>> DeleteUser(int id)
+		public async Task<ActionResult<bool>> DeleteUser(int id)
 		{
-			await _userCollection.Delete(id);
-			return Ok($"Delete user {id}");
+			return Ok(await _userCollection.Delete(id));
 		}
 		[HttpPost]
 		[Route("AddSteamId")]
 		[Authorize]
-		public async Task<ActionResult<string>> AddSteamId(int userId, string steamId)
+		public async Task<ActionResult<bool>> AddSteamId(int userId, string steamId)
 		{
-			await _userCollection.AddSteamId(userId, steamId);
-			return Ok($"Add steamId {steamId} to user {userId}");
+			return Ok(await _userCollection.AddSteamId(userId, steamId));
 		}
 	}
 
