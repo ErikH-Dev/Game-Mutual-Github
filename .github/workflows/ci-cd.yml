@@ -23,10 +23,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build and Push Vue Docker Image
+      - name: Build Vue Docker Image
         run: |
           docker build -t $WEB_IMAGE_NAME:$IMAGE_TAG $FRONTEND_DIRECTORY
-          docker push $WEB_IMAGE_NAME:$IMAGE_TAG
           
 
   ASP-Build:
@@ -35,10 +34,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         
-      - name: Build and Push API Docker Image
+      - name: Build API Docker Image
         run: |
           docker build -t $API_IMAGE_NAME:$IMAGE_TAG $BACKEND_DIRECTORY
-          docker push $API_IMAGE_NAME:$IMAGE_TAG
 
   ASP-Unit-Test:
     needs: ASP-Build
