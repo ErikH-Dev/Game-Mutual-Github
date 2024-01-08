@@ -10,10 +10,9 @@ on:
   pull_request:
 
 env:
-  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-  IMAGE_NAME: erieq/game-mutual
-  IMAGE_TAG: csharp-app-1.0
+  WEB_IMAGE_NAME: ghcr.io/erikh-dev/game-mutual-web
+  API_IMAGE_NAME: ghcr.io/erikh-dev/game-mutual-api
+  IMAGE_TAG: latest
   BACKEND_DIRECTORY: ./GameMutualAPI/
   FRONTEND_DIRECTORY: ./GameMutualFrontend/
 
@@ -24,27 +23,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Login to Docker Hub
-        run: echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-
       - name: Build and Push Vue Docker Image
         run: |
-          docker build -t $DOCKER_HUB_USERNAME/game-mutual:vue-${GITHUB_SHA::8} $FRONTEND_DIRECTORY
-          docker push $DOCKER_HUB_USERNAME/game-mutual:vue-${GITHUB_SHA::8}
+          docker build -t $WEB_IMAGE_NAME:$IMAGE_TAG $FRONTEND_DIRECTORY
+          docker push $WEB_IMAGE_NAME:$IMAGE_TAG
+          
 
   ASP-Build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Login to Docker Hub
-        run: echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-
+        
       - name: Build and Push API Docker Image
         run: |
-          docker build -t $DOCKER_HUB_USERNAME/game-mutual:api-${GITHUB_SHA::8} $BACKEND_DIRECTORY
-          docker push $DOCKER_HUB_USERNAME/game-mutual:api-${GITHUB_SHA::8}
+          docker build -t $API_IMAGE_NAME:$IMAGE_TAG $BACKEND_DIRECTORY
+          docker push $API_IMAGE_NAME:$IMAGE_TAG
 
   ASP-Unit-Test:
     needs: ASP-Build
@@ -124,3 +118,18 @@ jobs:
           args: >
             -Dsonar.projectKey=ErikH-Dev_Game-Mutual-Github
             -Dsonar.organization=erikh-dev
+  Deploy:
+    needs: [SonarQube-Backend, SonarQube-Frontend]
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Github Container Registry
+        run: |
+          docker login --username erieq --password ${{ secrets.GH_PAT }} ghcr.io
+          
+      - name: Push Docker images
+        run: |
+         docker push $API_IMAGE_NAME:$IMAGE_TAG
+         docker push $WEB_IMAGE_NAME:$IMAGE_TAG
+         
+    

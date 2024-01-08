@@ -4,7 +4,7 @@ using Logic.Interface;
 using Moq;
 using UnitTesting.Models;
 
-namespace Tests
+namespace UnitTesting
 {
 	[TestClass]
 	public class UserCollectionTests
